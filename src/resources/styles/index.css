@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+
+html {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;   
+    float: left;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+#root, .App {
+    float: left;
+    width: 100%;
+    height: 100%;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+button, input, form {
+    font-family: 'Roboto', sans-serif;   
+}
+
+/* ====================== HEADER ========================*/
+
+
+header {
+    height: 20vh;
+    width: 100%;
+    max-width: 920px;
+    display: block;
+    margin: 0 auto;
+}
+
+header h2 {
+    width: 250px;
+    float: left;
+    margin-left: 20px;
+    text-decoration: underline;
+}
+
+.btn-help, .btn-save, .btn-search {
+    float: right;
+    margin: 20px 0 0 20px;
+    font-size: 28px;
+}
+
+header input[type=text] {
+    background: none;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    padding: 7px 10px;
+    font-size: 15px;
+    width: 100px;
+    float: right;
+    outline: none;
+    margin: 17px -10px 0 0;
+}
+
+
+/* ====================== TREE ELEMENTS ========================*/
+
+
+.Tree-Elements {
+    height: 60vh;
+    width: 100%;
+    max-width: 920px;
+    display: block;
+    margin: 0 auto;
+}
+
+/* ====================== TOOLBAR ========================*/
+
+.Toolbar {
+    height: 20vh;
+    width: 100%;
+    border-top: 1px solid #ddd;
+}
+
+.btn-play {
+    background: none;
+    border: none;
+    width: 80px;
+    font-size: 72px;
+    display: block;
+    height: 80px;
+    cursor: pointer;
+    margin: 40px auto;
+}
+
+.btn-play svg {
+    stroke-width: 1;
+}
