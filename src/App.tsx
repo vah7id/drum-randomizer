@@ -4,6 +4,7 @@ import TreeElements from './components/treeElements';
 import Header from './components/header';
 import * as types from './types';
 import defaultPatterns from './resources/patterns';
+import defaultElement from './resources/elements';
 
 type TreeState = {
   patterns: number[][],
@@ -16,18 +17,13 @@ type TreeState = {
 class App extends React.Component<any, TreeState> {
   state: TreeState = {
     patterns: defaultPatterns[0],
-    elements: [
-      {title: 'hat', destination: 'https://tonejs.github.io/audio/salamander/C4.mp3'},
-      {title: 'cat', destination: 'https://tonejs.github.io/audio/berklee/gong_1.mp3'},
-      {title: 'juice', destination: 'https://tonejs.github.io/audio/berklee/gong_1.mp3'},
-      {title: 'street', destination: 'https://tonejs.github.io/audio/berklee/gong_1.mp3'},
-      {title: 'wind', destination: 'https://tonejs.github.io/audio/salamander/C4.mp3'}
-    ],
+    elements: defaultElement,
     play: false,
     mute: false,
     tempo: 120
   };
   render() {
+    console.log(this.props)
     return (
       <div className="App">
         <Header />

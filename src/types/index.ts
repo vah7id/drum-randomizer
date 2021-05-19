@@ -1,4 +1,5 @@
 export interface IElement {
     title: string,
-    destination: string
+    destination: string,
+    tag: string
 }

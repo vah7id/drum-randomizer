@@ -16,32 +16,50 @@ const Toolbar = (props: ToolbarProps) => {
     const [play, triggerPlay] = useState<boolean>(false);
     const [sampler, setSampler] = useState<Tone.Sampler>();
     const [loop, setLoop] = useState<any>();
+    const MAX_DRUM_RACK = 5;
 
     const playLoop = () => {
+        // first fetch the 5 random unique elements
+        const randomElements = getRandomElements(props.elements);
+
         const loop = setInterval(() => {
+            
+            // setup the drum racks with sampler 
             const drumRack = new Tone.Sampler({
-                C1: props.elements[0].destination,
-                C2: props.elements[1].destination,
-                C3: props.elements[2].destination,
-                C4: props.elements[3].destination,
-                C5: props.elements[4].destination            
+                C1: `http://localhost:8000/public/samples/${randomElements[0].destination}`,
+                C2: `http://localhost:8000/public/samples/${randomElements[1].destination}`,
+                C3: `http://localhost:8000/public/samples/${randomElements[2].destination}`,
+                C4: `http://localhost:8000/public/samples/${randomElements[3].destination}`,
+                C5: `http://localhost:8000/public/samples/${randomElements[4].destination}`,   
             }, () => {
+                // start time of the sampler
+                const startTime = Tone.immediate();
+
+                // play the racks based on current pattern
                 props.patterns.forEach((pattern, i) => {
-                    const startTime = Tone.immediate();
                     pattern.forEach((p, idx) => {
                         if(p === 1) {
-                            console.log('active idx: ', idx);
-                            console.log('pattern: ', i);
-
                             drumRack.triggerAttack(`C${i}`,startTime + idx/10);
                         }
                     })
                 });
             }).toDestination();    
+
             drumRack.context.resume() // necessary for Safari
+
+            // store the sampler for next usage 
             setSampler(drumRack);
         }, 2000);
+        
         setLoop(loop);
+    }
+
+    const getRandomElements = (elements: IElement[]) => {
+        const randNums = new Set();
+        while(randNums.size !== MAX_DRUM_RACK) {
+            randNums.add(Math.floor(Math.random() * elements.length-1) + 1);
+        }
+        return elements.filter((el, i) => Array.from(randNums).includes(i));
     }
 
     const stopLoop = () => {
