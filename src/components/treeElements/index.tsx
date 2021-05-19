@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { IElement } from '../../types';
 
-function TreeElements() {
-  return (
-    <div className="Tree-Elements">
-     
-    </div>
-  );
+type TreeProps = {
+  elements: IElement[];
+};
+
+function TreeElements(props: TreeProps) {
+  return(
+      <div className={'Tree-Elements'}>
+       
+      </div>);
 }
 
 export default TreeElements;
