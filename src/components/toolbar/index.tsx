@@ -26,11 +26,11 @@ const Toolbar = (props: ToolbarProps) => {
             
             // setup the drum racks with sampler 
             const drumRack = new Tone.Sampler({
-                C1: `http://localhost:8000/public/samples/${randomElements[0].destination}`,
-                C2: `http://localhost:8000/public/samples/${randomElements[1].destination}`,
-                C3: `http://localhost:8000/public/samples/${randomElements[2].destination}`,
-                C4: `http://localhost:8000/public/samples/${randomElements[3].destination}`,
-                C5: `http://localhost:8000/public/samples/${randomElements[4].destination}`,   
+                C1: `${process.env.REACT_APP_SAMPLES_URL}/${randomElements[0].destination}`,
+                C2: `${process.env.REACT_APP_SAMPLES_URL}/${randomElements[1].destination}`,
+                C3: `${process.env.REACT_APP_SAMPLES_URL}/${randomElements[2].destination}`,
+                C4: `${process.env.REACT_APP_SAMPLES_URL}/${randomElements[3].destination}`,
+                C5: `${process.env.REACT_APP_SAMPLES_URL}/${randomElements[4].destination}`,   
             }, () => {
                 // start time of the sampler
                 const startTime = Tone.immediate();
@@ -45,11 +45,12 @@ const Toolbar = (props: ToolbarProps) => {
                 });
             }).toDestination();    
 
-            drumRack.context.resume() // necessary for Safari
+            drumRack.context.resume(); // necessary for Safari
 
             // store the sampler for next usage 
             setSampler(drumRack);
-        }, 2000);
+
+        }, 1000);
         
         setLoop(loop);
     }
@@ -86,7 +87,7 @@ const Toolbar = (props: ToolbarProps) => {
     return (
         <div className="Toolbar">
             <div className="Toolbar-patterns">
-                <Patterns />
+                <Patterns patterns={props.patterns} />
             </div>
             <div className="Toolbar-actions">
                 <button onClick={() => handlePlay()} className="btn-icon btn-play">

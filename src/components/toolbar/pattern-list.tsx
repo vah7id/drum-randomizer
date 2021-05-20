@@ -1,98 +1,19 @@
 import React from 'react';
 
-function Patterns() {
+type PatternsProps = {
+    patterns: number[][]
+}
+
+const Patterns = (props: PatternsProps) => {
   return (
     <div className="Patterns">
-        <div className={'pattern-row'}>
-            <span className={'active'}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={'active'}> </span>
-            <span className={'active'}> </span>
-            <span className={'active'}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={'active'}> </span>
-            <span className={'active'}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-        </div>
-        <div className={'pattern-row'}>
-            <span className={'active'}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={'active'}> </span>
-            <span className={'active'}> </span>
-            <span className={'active'}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={'active'}> </span>
-            <span className={'active'}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-        </div>
-        <div className={'pattern-row'}>
-            <span className={'active'}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={'active'}> </span>
-            <span className={'active'}> </span>
-            <span className={'active'}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={'active'}> </span>
-            <span className={'active'}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-        </div>
-        <div className={'pattern-row'}>
-            <span className={'active'}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={'active'}> </span>
-            <span className={'active'}> </span>
-            <span className={'active'}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={'active'}> </span>
-            <span className={'active'}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-        </div>
-        <div className={'pattern-row'}>
-            <span className={'active'}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={'active'}> </span>
-            <span className={'active'}> </span>
-            <span className={'active'}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={'active'}> </span>
-            <span className={'active'}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-            <span className={''}> </span>
-        </div>
+        {
+            props.patterns.map((pattern, index) => 
+                <div className={'pattern-row'} key={`row-${index}`}>
+                    {pattern.map((p, index) => <span className={p === 1 ? 'active':'' }></span>)}
+                </div>
+            )
+        }
     </div>
   );
 }
