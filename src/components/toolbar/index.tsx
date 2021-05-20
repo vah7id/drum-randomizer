@@ -17,7 +17,7 @@ const Toolbar = (props: ToolbarProps) => {
         
     // defaults
     const MAX_DRUM_RACK = 5;
-    const DEFAULT_TEMPO = 120;
+    const DEFAULT_TEMPO = 60;
 
     // state hooks
     const [play, triggerPlay] = useState<boolean>(false);
@@ -30,17 +30,8 @@ const Toolbar = (props: ToolbarProps) => {
 
     const playLoop = () => {
         if(elements) {
-            const loop = setInterval(() => {
-
-                // setup the drum racks with sampler 
-                const drumRack = setupDrumRack();
-
-                // store the sampler for next usage 
-                setSampler(drumRack);
-
-            }, 1000 * 60 / tempo);//TODO timeout has to be based on tempo
-            
-            setLoop(loop);
+            // setup the drum racks with sampler 
+            setupDrumRack();
         }
     }
 
@@ -54,7 +45,6 @@ const Toolbar = (props: ToolbarProps) => {
 
     const setupDrumRack = () => {
         // by default setup 5 random drum rack to start
-        const tempoToMs = 1000 * 60 / tempo;
 
         const drumRack = new Tone.Sampler({
             C1: `${process.env.REACT_APP_SAMPLES_URL}/${elements[0].destination}`,
@@ -63,28 +53,38 @@ const Toolbar = (props: ToolbarProps) => {
             C4: `${process.env.REACT_APP_SAMPLES_URL}/${elements[3].destination}`,
             C5: `${process.env.REACT_APP_SAMPLES_URL}/${elements[4].destination}`,   
         }, () => {
-            // start time of the sampler
-            const startTime = Tone.immediate();
-
-            // play the racks based on current pattern
-            props.patterns.forEach((pattern, i) => {
-                pattern.forEach((p, idx) => {
-                    if(p === 1) {
-                        console.log(startTime)
-                        drumRack.volume.value = mute ? -100 : 0;
-                        drumRack.triggerAttack(`C${i}`,startTime + (idx * ((60 * 1000 / tempoToMs) / 1000)));
-                    }
-                })
-            });
+            // store the sampler for next usage 
+            setSampler(drumRack);
+            playSequencer(drumRack);
+            
         }).toDestination();    
 
         drumRack.context.resume(); // necessary for Safari
         return drumRack;
     }
 
+    const playSequencer = (drumRack: any) => {
+        const seq = new Tone.Sequence((time, note) => {
+            // play the racks based on current pattern
+            props.patterns.forEach((pattern, i) => {
+                pattern.forEach((p, idx) => {
+                    if(p === 1) {
+                        console.log(tempo)
+                        drumRack.volume.value = mute ? -100 : 0;
+                        drumRack.triggerAttack(`C${i}`,time + (idx * ((60 * 1000 / tempo) / 1000)));
+                    }
+                })
+            });
+            // subdivisions are given as subarrays
+        }, ["C1", "C2", "C3", "C4", "C5"], 60/tempo).start(0);
+        Tone.Transport.start();
+        setLoop(seq);
+    }
+
     const stopLoop = () => {
-        clearInterval(loop);
-        setLoop(null);
+        Tone.Transport.stop();
+        loop.stop();
+        sampler?.disconnect();
     }
 
     const handlePlay = () => {
@@ -103,6 +103,12 @@ const Toolbar = (props: ToolbarProps) => {
         triggerMute(!mute);
         const vol = new Tone.Volume(mute ? 0 : -100);
         Tone.Destination.chain(vol);
+    }
+
+    const handleTempo = (e: any) => {
+        setTempo(e.target.value);
+        loop.stop();
+        playSequencer(sampler);
     }
 
 
@@ -129,7 +135,14 @@ const Toolbar = (props: ToolbarProps) => {
                     {mute ? <FiVolume2 /> : <FiVolumeX />}
                 </button>
                 <span className={'tempo'}>
-                    {tempo} <b>bpm</b>
+                    <input type={'number'} 
+                        className={'input-tempo'} 
+                        name={'tempo'} 
+                        value={tempo.toString()} 
+                        onChange={(e) => handleTempo(e)}
+                    />
+                    <span className={'tempo-hint'}></span>
+                    <b>bpm</b>
                 </span>
             </div>
             
