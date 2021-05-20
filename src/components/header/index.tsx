@@ -10,7 +10,7 @@ function Header() {
         <button className={'btn-icon btn-help'}>
            <FiHelpCircle />
         </button>
-        <button className={'btn-icon btn-save'}>
+        <button disabled className={'btn-icon btn-save'}>
            <FiSave />
         </button>
         <button className={'btn-icon btn-search'}>

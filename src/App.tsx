@@ -14,7 +14,7 @@ type TreeState = {
   tempo: number,
 };
 
-class App extends React.Component<any, TreeState> {
+class App extends React.Component<{}, TreeState> {
   state: TreeState = {
     patterns: defaultPatterns[0],
     elements: defaultElement,
@@ -23,7 +23,6 @@ class App extends React.Component<any, TreeState> {
     tempo: 120
   };
   render() {
-    console.log(this.props)
     return (
       <div className="App">
         <Header />

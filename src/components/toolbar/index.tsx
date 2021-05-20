@@ -4,6 +4,7 @@ import { FiPlayCircle } from "react-icons/fi";
 import { FiPauseCircle } from "react-icons/fi";
 import { FiZap } from "react-icons/fi";
 import { FiVolumeX } from "react-icons/fi";
+import { FiVolume2 } from 'react-icons/fi';
 import * as Tone from 'tone'
 import { IElement } from '../../types';
 
@@ -13,46 +14,34 @@ type ToolbarProps = {
 };
 
 const Toolbar = (props: ToolbarProps) => {
-    const [play, triggerPlay] = useState<boolean>(false);
-    const [sampler, setSampler] = useState<Tone.Sampler>();
-    const [loop, setLoop] = useState<any>();
+        
+    // defaults
     const MAX_DRUM_RACK = 5;
+    const DEFAULT_TEMPO = 120;
+
+    // state hooks
+    const [play, triggerPlay] = useState<boolean>(false);
+    const [mute, triggerMute] = useState<boolean>(false);
+    const [tempo, setTempo] = useState<number>(DEFAULT_TEMPO)
+    const [sampler, setSampler] = useState<Tone.Sampler | undefined>();
+    const [elements, setElemenets] = useState<IElement[]>([]);
+    const [loop, setLoop] = useState<any>();
+
 
     const playLoop = () => {
-        // first fetch the 5 random unique elements
-        const randomElements = getRandomElements(props.elements);
+        if(elements) {
+            const loop = setInterval(() => {
 
-        const loop = setInterval(() => {
+                // setup the drum racks with sampler 
+                const drumRack = setupDrumRack();
+
+                // store the sampler for next usage 
+                setSampler(drumRack);
+
+            }, 1000 * 60 / tempo);//TODO timeout has to be based on tempo
             
-            // setup the drum racks with sampler 
-            const drumRack = new Tone.Sampler({
-                C1: `${process.env.REACT_APP_SAMPLES_URL}/${randomElements[0].destination}`,
-                C2: `${process.env.REACT_APP_SAMPLES_URL}/${randomElements[1].destination}`,
-                C3: `${process.env.REACT_APP_SAMPLES_URL}/${randomElements[2].destination}`,
-                C4: `${process.env.REACT_APP_SAMPLES_URL}/${randomElements[3].destination}`,
-                C5: `${process.env.REACT_APP_SAMPLES_URL}/${randomElements[4].destination}`,   
-            }, () => {
-                // start time of the sampler
-                const startTime = Tone.immediate();
-
-                // play the racks based on current pattern
-                props.patterns.forEach((pattern, i) => {
-                    pattern.forEach((p, idx) => {
-                        if(p === 1) {
-                            drumRack.triggerAttack(`C${i}`,startTime + idx/10);
-                        }
-                    })
-                });
-            }).toDestination();    
-
-            drumRack.context.resume(); // necessary for Safari
-
-            // store the sampler for next usage 
-            setSampler(drumRack);
-
-        }, 1000);
-        
-        setLoop(loop);
+            setLoop(loop);
+        }
     }
 
     const getRandomElements = (elements: IElement[]) => {
@@ -61,6 +50,36 @@ const Toolbar = (props: ToolbarProps) => {
             randNums.add(Math.floor(Math.random() * elements.length-1) + 1);
         }
         return elements.filter((el, i) => Array.from(randNums).includes(i));
+    }
+
+    const setupDrumRack = () => {
+        // by default setup 5 random drum rack to start
+        const tempoToMs = 1000 * 60 / tempo;
+
+        const drumRack = new Tone.Sampler({
+            C1: `${process.env.REACT_APP_SAMPLES_URL}/${elements[0].destination}`,
+            C2: `${process.env.REACT_APP_SAMPLES_URL}/${elements[1].destination}`,
+            C3: `${process.env.REACT_APP_SAMPLES_URL}/${elements[2].destination}`,
+            C4: `${process.env.REACT_APP_SAMPLES_URL}/${elements[3].destination}`,
+            C5: `${process.env.REACT_APP_SAMPLES_URL}/${elements[4].destination}`,   
+        }, () => {
+            // start time of the sampler
+            const startTime = Tone.immediate();
+
+            // play the racks based on current pattern
+            props.patterns.forEach((pattern, i) => {
+                pattern.forEach((p, idx) => {
+                    if(p === 1) {
+                        console.log(startTime)
+                        drumRack.volume.value = mute ? -100 : 0;
+                        drumRack.triggerAttack(`C${i}`,startTime + (idx * ((60 * 1000 / tempoToMs) / 1000)));
+                    }
+                })
+            });
+        }).toDestination();    
+
+        drumRack.context.resume(); // necessary for Safari
+        return drumRack;
     }
 
     const stopLoop = () => {
@@ -80,9 +99,19 @@ const Toolbar = (props: ToolbarProps) => {
         }
     }
 
-    useEffect(() => {
+    const handleVolume = () => {
+        triggerMute(!mute);
+        const vol = new Tone.Volume(mute ? 0 : -100);
+        Tone.Destination.chain(vol);
+    }
 
-    });
+
+    useEffect(() => {
+        // first fetch the 5 random unique elements
+        if(elements.length === 0) {
+            setElemenets(getRandomElements(props.elements));
+        }
+    })
 
     return (
         <div className="Toolbar">
@@ -96,11 +125,11 @@ const Toolbar = (props: ToolbarProps) => {
                 <button className={'btn-icon btn-shuffle'}>
                     <FiZap />
                 </button>
-                <button className={'btn-icon btn-volume'}>
-                    <FiVolumeX />
+                <button onClick={() => handleVolume()} className={'btn-icon btn-volume'}>
+                    {mute ? <FiVolume2 /> : <FiVolumeX />}
                 </button>
                 <span className={'tempo'}>
-                    120 <b>bpm</b>
+                    {tempo} <b>bpm</b>
                 </span>
             </div>
             
