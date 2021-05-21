@@ -20,6 +20,9 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
+  "typeAcquisition": {
+    "include": ["three"]
+  },
   "include": [
     "src"
   ]

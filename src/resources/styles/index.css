@@ -75,7 +75,31 @@ header input[type=text] {
 .Tree-Elements {
     height: 60vh;
     width: 100%;
+    max-width: 920px;
+    margin: -50px auto 0 auto;
     border-bottom: 1px solid #222;
+}
+
+.Tree-Element {
+    position: relative;
+    z-index: 100;
+    cursor: pointer;
+    float: left;
+    max-width: 150px;
+    text-align: center;
+    padding: 40px 25px 40px 25px;
+    font-weight: bold;
+    background: rgba(255,255,255,0.4);
+    font-size: 28px;
+    text-transform: uppercase;
+    margin: 25px 25px 25px 25px;
+    border: 1px solid black;
+    transition: all 0.5s;
+}
+
+.Tree-Element:hover {
+    background: black;
+    color: white;
 }
 
 /* ====================== TOOLBAR ========================*/
@@ -214,4 +238,13 @@ input[type=number]::-webkit-outer-spin-button {
 
 .pattern-row span.active {
     background: black;
+}
+
+/* ====================== CANVAS ======================*/
+
+canvas{
+    position: absolute;
+    top:0;
+    left:0;
+    z-index:-1;
 }
