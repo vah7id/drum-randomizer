@@ -22,7 +22,7 @@ const Toolbar = (props: ToolbarProps) => {
     const [sampler, setSampler] = useState<Tone.Sampler | undefined>();
     const [elements, setElemenets] = useState<IElement[]>([]);
     const [loop, setLoop] = useState<any>();
-    const [pattern, setPattern] = useState<number[][]>(props.patterns);
+    const [pattern, setPattern] = useState<number[][]>(props.patterns[0]);
 
     const playLoop = () => {
         if(elements) {
@@ -82,9 +82,9 @@ const Toolbar = (props: ToolbarProps) => {
     const playSequencer = (drumRack: any) => {
         const seq = new Tone.Sequence((time, note) => {
             // play the racks based on current pattern
-            props.patterns.forEach((pattern, i) => {
-                pattern.forEach((p, idx) => {
-                    if(p === 1) {
+            pattern.forEach((patternRow, i) => {
+                patternRow.forEach((patternIndex, idx) => {
+                    if(patternIndex === 1) {
                         const scheduleTime = time + (idx * ((60 * 1000 / tempo) / 1000));
                         drumRack.volume.value = mute ? -100 : -10;
                         drumRack.triggerAttack(`C${i+1}`, scheduleTime);
@@ -148,6 +148,14 @@ const Toolbar = (props: ToolbarProps) => {
         }
     }
 
+    const shufflePattern = () => {
+        // set random pattern from default patterns
+        setPattern(props.patterns[Math.floor(Math.random() * props.patterns.length-1) + 1]);
+        
+        if(loop) {
+            playBack();
+        }
+    }
 
     useEffect(() => {
         // first fetch the 5 random unique elements
@@ -156,7 +164,7 @@ const Toolbar = (props: ToolbarProps) => {
         } else {
             setupDrumRack(false);
         }
-    }, [elements])
+    }, [elements, pattern])
 
     return (
         <div className="Toolbar">
@@ -167,7 +175,7 @@ const Toolbar = (props: ToolbarProps) => {
                 <button onClick={() => handlePlay()} className="btn-icon btn-play">
                     {play ? <FiPauseCircle /> : <FiPlayCircle />}
                 </button>
-                <button className={'btn-icon btn-shuffle'}>
+                <button onClick={() => shufflePattern()} className={'btn-icon btn-shuffle'}>
                     <FiZap />
                 </button>
                 <button onClick={() => handleVolume()} className={'btn-icon btn-volume'}>

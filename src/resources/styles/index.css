@@ -140,14 +140,23 @@ input[type=number]::-webkit-outer-spin-button {
 
 .btn-shuffle {
     width: 80px;
+    height: 80px;
     font-size: 50px;
+    border-radius: 100%;
     float: left;
     opacity: 0.8;
-    margin: 52px 20px 0 30px;
+    transition: all 0.2s;
+    margin: 40px 20px 0 30px;
 }
 
 .btn-shuffle svg {
+    margin-top: 10px;
     stroke-width: 1;
+}
+
+.btn-shuffle:active {
+    color: yellow;
+    background: rgb(227, 94, 17);
 }
 
 

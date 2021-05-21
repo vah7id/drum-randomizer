@@ -9,7 +9,7 @@ import defaultElement from './resources/elements';
 
 class App extends React.Component<TreeProps, TreeState> {
   state: TreeState = {
-    patterns: defaultPatterns[0],
+    patterns: defaultPatterns,
     elements: defaultElement
   };
   render() {
