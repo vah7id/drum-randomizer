@@ -7,6 +7,7 @@ import { FiVolumeX } from "react-icons/fi";
 import { FiVolume2 } from 'react-icons/fi';
 import * as Tone from 'tone'
 import { IElement, ToolbarProps } from '../../types';
+import Tempo from './tempo';
 
 const Toolbar = (props: ToolbarProps) => {
         
@@ -172,16 +173,7 @@ const Toolbar = (props: ToolbarProps) => {
                 <button onClick={() => handleVolume()} className={'btn-icon btn-volume'}>
                     {mute ? <FiVolume2 /> : <FiVolumeX />}
                 </button>
-                <span className={'tempo'}>
-                    <input type={'number'} 
-                        className={'input-tempo'} 
-                        name={'tempo'} 
-                        value={tempo.toString()} 
-                        onChange={(e) => handleTempo(e)}
-                    />
-                    <span className={'tempo-hint'}></span>
-                    <b>bpm</b>
-                </span>
+                <Tempo tempo={tempo} handleTempo={handleTempo} />
             </div>
             
         </div>

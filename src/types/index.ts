@@ -9,9 +9,6 @@ export interface IElement {
 export interface TreeState {
     patterns: number[][],
     elements: IElement[],
-    play: boolean,
-    mute: boolean,
-    tempo: number,
 };
 
 export interface TreeProps {
@@ -27,3 +24,8 @@ export interface ToolbarProps {
     patterns: number[][],
     elements: IElement[],
 };
+
+export interface TempoProps {
+    tempo: number,
+    handleTempo(e: any): void
+}

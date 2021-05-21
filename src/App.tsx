@@ -10,10 +10,7 @@ import defaultElement from './resources/elements';
 class App extends React.Component<TreeProps, TreeState> {
   state: TreeState = {
     patterns: defaultPatterns[0],
-    elements: defaultElement,
-    play: false,
-    mute: false,
-    tempo: 120
+    elements: defaultElement
   };
   render() {
     return (
