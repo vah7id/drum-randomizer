@@ -31,17 +31,6 @@ const Toolbar = (props: ToolbarProps) => {
         }
     }
 
-    const getRandomElements = (elements: IElement[]) => {
-        const randNums = new Set();
-        
-        // generate 5 random number of racks from default elements
-        while(randNums.size !== MAX_DRUM_RACK) {
-            randNums.add(Math.floor(Math.random() * elements.length-1) + 1);
-        }
-
-        return elements.filter((el, i) => Array.from(randNums).includes(i));
-    }
-
     const updatePattern = (patternIndex: number[], value: number) => {
         let tmp: any = pattern;
         tmp[patternIndex[0]][patternIndex[1]] = value === 1 ? 0 : 1;
@@ -68,6 +57,7 @@ const Toolbar = (props: ToolbarProps) => {
             C4: `${process.env.REACT_APP_SAMPLES_URL}/${elements[3].destination}`,
             C5: `${process.env.REACT_APP_SAMPLES_URL}/${elements[4].destination}`,   
         }, () => {
+
             // store the sampler for next usage 
             setSampler(drumRack);
 
@@ -75,6 +65,7 @@ const Toolbar = (props: ToolbarProps) => {
             if(autoplay) {
                 playSequencer(drumRack);
             }
+
         }).toDestination();    
 
         drumRack.context.resume(); // necessary for Safari
@@ -104,6 +95,7 @@ const Toolbar = (props: ToolbarProps) => {
         Tone.Transport.stop();
         loop.stop();
         sampler?.disconnect();
+        console.log('asdasd')
     }
 
     const handlePlay = () => {

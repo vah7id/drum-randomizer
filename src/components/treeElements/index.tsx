@@ -8,7 +8,7 @@ type TreeProps = {
 
 function TreeElements(props: TreeProps) {
 
-  const SEPARATION = 100, AMOUNTX = 50, AMOUNTY = 50;
+  const SEPARATION = 100, AMOUNTX = 100, AMOUNTY = 200;
 
   let container, camera: any, scene: any, renderer: any;
 
@@ -23,7 +23,7 @@ function TreeElements(props: TreeProps) {
     container = document.createElement( 'div' );
       document.body.appendChild( container );
 
-				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+				camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000 );
 				camera.position.z = 1000;
 				camera.position.y = 1000;
 
