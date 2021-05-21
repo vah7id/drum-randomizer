@@ -2,27 +2,55 @@ import React from 'react';
 import Toolbar from './components/toolbar';
 import TreeElements from './components/treeElements';
 import Header from './components/header';
-import {TreeProps, TreeState} from './types';
+import {TreeProps, TreeState, IElement} from './types';
 import defaultPatterns from './resources/patterns';
-import defaultElement from './resources/elements';
+import defaultElements from './resources/elements';
 
 
 class App extends React.Component<TreeProps, TreeState> {
   state: TreeState = {
     patterns: defaultPatterns,
-    elements: defaultElement
+    defaultElements: defaultElements,
+    currentElements: []
   };
+
+  shuffleElements() {
+    this.setState({
+      currentElements: this.getRandomElements(this.state.defaultElements)
+    });
+  }
+
+  getRandomElements(elements: IElement[]) {
+    const randNums = new Set();
+    
+    // generate 5 random number of racks from default elements
+    while(randNums.size !== 5) {
+        randNums.add(Math.floor(Math.random() * elements.length-1) + 1);
+    }
+
+    return elements.filter((el, i) => Array.from(randNums).includes(i));
+  }
+
+  componentDidMount() {
+    this.shuffleElements();
+  }
+
   render() {
     return (
       <div className="App">
         <Header />
-        <TreeElements 
-          elements={this.state.elements} 
-        />
-        <Toolbar 
-          elements={this.state.elements} 
-          patterns={this.state.patterns} 
-        />
+        {this.state.currentElements.length !== 0 &&
+          <>
+            <TreeElements 
+              elements={this.state.currentElements} 
+            />
+            <Toolbar 
+              shuffleElements={this.shuffleElements.bind(this)}
+              elements={this.state.currentElements} 
+              patterns={this.state.patterns} 
+            />
+          </>
+        }
       </div>
     );
   }

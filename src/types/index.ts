@@ -8,7 +8,8 @@ export interface IElement {
 
 export interface TreeState {
     patterns: number[][][],
-    elements: IElement[],
+    defaultElements: IElement[],
+    currentElements: IElement[],
 };
 
 export interface TreeProps {
@@ -23,6 +24,7 @@ export interface PatternsProps {
 export interface ToolbarProps {
     patterns: number[][][],
     elements: IElement[],
+    shuffleElements(): void,
 };
 
 export interface TempoProps {

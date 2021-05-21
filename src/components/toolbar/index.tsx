@@ -20,7 +20,7 @@ const Toolbar = (props: ToolbarProps) => {
     const [mute, triggerMute] = useState<boolean>(false);
     const [tempo, setTempo] = useState<number>(DEFAULT_TEMPO)
     const [sampler, setSampler] = useState<Tone.Sampler | undefined>();
-    const [elements, setElemenets] = useState<IElement[]>([]);
+    const [elements, setElemenets] = useState<IElement[]>(props.elements);
     const [loop, setLoop] = useState<any>();
     const [pattern, setPattern] = useState<number[][]>(props.patterns[0]);
 
@@ -60,7 +60,7 @@ const Toolbar = (props: ToolbarProps) => {
 
     const setupDrumRack = (autoplay: boolean) => {
         // by default setup 5 random drum rack to start
-
+        console.log(elements)
         const drumRack = new Tone.Sampler({
             C1: `${process.env.REACT_APP_SAMPLES_URL}/${elements[0].destination}`,
             C2: `${process.env.REACT_APP_SAMPLES_URL}/${elements[1].destination}`,
@@ -70,6 +70,8 @@ const Toolbar = (props: ToolbarProps) => {
         }, () => {
             // store the sampler for next usage 
             setSampler(drumRack);
+
+            // start the sequencer based on pattern
             if(autoplay) {
                 playSequencer(drumRack);
             }
@@ -149,20 +151,24 @@ const Toolbar = (props: ToolbarProps) => {
     }
 
     const shufflePattern = () => {
+        // disconnect the sampler before reset the elements
+        Tone.Transport.stop();
+        sampler?.disconnect();
+
         // set random pattern from default patterns
         setPattern(props.patterns[Math.floor(Math.random() * props.patterns.length-1) + 1]);
-        
+        props.shuffleElements();
+
         if(loop) {
             playBack();
         }
     }
 
     useEffect(() => {
-        // first fetch the 5 random unique elements
-        if(elements.length === 0) {
-            setElemenets(getRandomElements(props.elements));
-        } else {
-            setupDrumRack(false);
+        // setup and initialize the drum rack sampler
+        setupDrumRack(false);
+        if(Object.keys(props.elements) !== Object.keys(elements)) {
+            setElemenets(props.elements);
         }
     }, [elements, pattern])
 

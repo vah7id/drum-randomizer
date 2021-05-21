@@ -8,7 +8,7 @@ type TreeProps = {
 function TreeElements(props: TreeProps) {
   return(
       <div className={'Tree-Elements'}>
-       
+        {props.elements.map(element => <div>{element.title}</div>)}
       </div>);
 }
 
