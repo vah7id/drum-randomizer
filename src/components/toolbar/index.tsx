@@ -6,12 +6,7 @@ import { FiZap } from "react-icons/fi";
 import { FiVolumeX } from "react-icons/fi";
 import { FiVolume2 } from 'react-icons/fi';
 import * as Tone from 'tone'
-import { IElement } from '../../types';
-
-type ToolbarProps = {
-    patterns: number[][],
-    elements: IElement[],
-};
+import { IElement, ToolbarProps } from '../../types';
 
 const Toolbar = (props: ToolbarProps) => {
         
@@ -26,24 +21,43 @@ const Toolbar = (props: ToolbarProps) => {
     const [sampler, setSampler] = useState<Tone.Sampler | undefined>();
     const [elements, setElemenets] = useState<IElement[]>([]);
     const [loop, setLoop] = useState<any>();
-
+    const [pattern, setPattern] = useState<number[][]>(props.patterns);
 
     const playLoop = () => {
         if(elements) {
             // setup the drum racks with sampler 
-            setupDrumRack();
+            setupDrumRack(true);
         }
     }
 
     const getRandomElements = (elements: IElement[]) => {
         const randNums = new Set();
+        
+        // generate 5 random number of racks from default elements
         while(randNums.size !== MAX_DRUM_RACK) {
             randNums.add(Math.floor(Math.random() * elements.length-1) + 1);
         }
+
         return elements.filter((el, i) => Array.from(randNums).includes(i));
     }
 
-    const setupDrumRack = () => {
+    const updatePattern = (patternIndex: number[], value: number) => {
+        let tmp: any = pattern;
+        tmp[patternIndex[0]][patternIndex[1]] = value === 1 ? 0 : 1;
+        
+        // play the current rack sound 
+        if(sampler) {
+            sampler.triggerAttack(`C${patternIndex[0]+1}`);
+        }
+
+        setPattern(tmp);
+
+        if(play) {
+            playBack();
+        }
+    }
+
+    const setupDrumRack = (autoplay: boolean) => {
         // by default setup 5 random drum rack to start
 
         const drumRack = new Tone.Sampler({
@@ -55,8 +69,9 @@ const Toolbar = (props: ToolbarProps) => {
         }, () => {
             // store the sampler for next usage 
             setSampler(drumRack);
-            playSequencer(drumRack);
-            
+            if(autoplay) {
+                playSequencer(drumRack);
+            }
         }).toDestination();    
 
         drumRack.context.resume(); // necessary for Safari
@@ -70,13 +85,14 @@ const Toolbar = (props: ToolbarProps) => {
                 pattern.forEach((p, idx) => {
                     if(p === 1) {
                         const scheduleTime = time + (idx * ((60 * 1000 / tempo) / 1000));
-                        drumRack.volume.value = mute ? -100 : -5;
-                        drumRack.triggerAttack(`C${i}`, scheduleTime);
+                        drumRack.volume.value = mute ? -100 : -10;
+                        drumRack.triggerAttack(`C${i+1}`, scheduleTime);
                     }
                 })
             });
             // subdivisions are given as subarrays
         }, ["C1", "C2", "C3", "C4", "C5"], 60/tempo).start(0);
+        
         Tone.Transport.start();
         setLoop(seq);
     }
@@ -101,8 +117,7 @@ const Toolbar = (props: ToolbarProps) => {
 
     const handleVolume = () => {
         triggerMute(!mute);
-        const vol = new Tone.Volume(mute ? 0 : -100);
-        Tone.Destination.chain(vol);
+        Tone.Destination.chain(new Tone.Volume(mute ? 0 : -100));
     }
 
     const handleTempo = (e: any) => {
@@ -110,14 +125,26 @@ const Toolbar = (props: ToolbarProps) => {
         
         if(play) {
             e.target.setAttribute('disabled', 'disabled');
-            Tone.Transport.stop();
-            loop.stop();
-            sampler?.disconnect();
-            triggerPlay(true);
-            playLoop();
-            e.target.removeAttribute('disabled');
+            playBack();
+            // this timeout will fix the performance issue
+            setTimeout(() => {
+                e.target.removeAttribute('disabled');
+            }, 200);
         }
        
+    }
+
+    const playBack = () => {
+        // stop the sequencer and disconnect the sampler
+        Tone.Transport.stop();
+        sampler?.disconnect();
+
+        // if the loop was going on just don't stop the music :M
+        if(loop) {
+            loop?.stop();
+            triggerPlay(true);
+            playLoop();
+        }
     }
 
 
@@ -125,13 +152,15 @@ const Toolbar = (props: ToolbarProps) => {
         // first fetch the 5 random unique elements
         if(elements.length === 0) {
             setElemenets(getRandomElements(props.elements));
+        } else {
+            setupDrumRack(false);
         }
-    })
+    }, [elements])
 
     return (
         <div className="Toolbar">
             <div className="Toolbar-patterns">
-                <Patterns patterns={props.patterns} />
+                <Patterns updatePattern={updatePattern.bind(this)} patterns={pattern} />
             </div>
             <div className="Toolbar-actions">
                 <button onClick={() => handlePlay()} className="btn-icon btn-play">
