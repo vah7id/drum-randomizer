@@ -69,9 +69,9 @@ const Toolbar = (props: ToolbarProps) => {
             props.patterns.forEach((pattern, i) => {
                 pattern.forEach((p, idx) => {
                     if(p === 1) {
-                        console.log(tempo)
-                        drumRack.volume.value = mute ? -100 : 0;
-                        drumRack.triggerAttack(`C${i}`,time + (idx * ((60 * 1000 / tempo) / 1000)));
+                        const scheduleTime = time + (idx * ((60 * 1000 / tempo) / 1000));
+                        drumRack.volume.value = mute ? -100 : -5;
+                        drumRack.triggerAttack(`C${i}`, scheduleTime);
                     }
                 })
             });
@@ -107,8 +107,17 @@ const Toolbar = (props: ToolbarProps) => {
 
     const handleTempo = (e: any) => {
         setTempo(e.target.value);
-        loop.stop();
-        playSequencer(sampler);
+        
+        if(play) {
+            e.target.setAttribute('disabled', 'disabled');
+            Tone.Transport.stop();
+            loop.stop();
+            sampler?.disconnect();
+            triggerPlay(true);
+            playLoop();
+            e.target.removeAttribute('disabled');
+        }
+       
     }
 
 

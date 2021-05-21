@@ -13,10 +13,6 @@ function Header() {
         <button disabled className={'btn-icon btn-save'}>
            <FiSave />
         </button>
-        <button className={'btn-icon btn-search'}>
-           <FiSearch />
-        </button>
-        <input type="text" name="filter" placeholder={'Filter...'} />
     </header>
   );
 }
