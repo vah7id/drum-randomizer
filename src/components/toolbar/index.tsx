@@ -91,7 +91,7 @@ const Toolbar = (props: ToolbarProps) => {
                                 
                                 // clear activated pattern
                                 setTimeout(() => sequencerPatternEl.style.background = bg, 500);
-                            }, scheduleTime * (60/tempo)*1000 );
+                            }, scheduleTime * (60/tempo)*1000);
                         }
                     }
                 })

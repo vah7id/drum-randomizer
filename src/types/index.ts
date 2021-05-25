@@ -8,6 +8,7 @@ export interface IElement {
 
 export interface TreeState {
     patterns: number[][][],
+    loading: boolean,
     defaultElements: IElement[],
     currentElements: IElement[],
 };

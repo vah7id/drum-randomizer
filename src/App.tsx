@@ -2,13 +2,16 @@ import React from 'react';
 import Toolbar from './components/toolbar';
 import TreeElements from './components/treeElements';
 import Header from './components/header';
+import IntroPopup from './components/header/intro';
 import {TreeProps, TreeState, IElement} from './types';
 import defaultPatterns from './resources/patterns';
 import defaultElements from './resources/elements';
 
 
 class App extends React.Component<TreeProps, TreeState> {
+ 
   state: TreeState = {
+    loading: true,
     patterns: defaultPatterns,
     defaultElements: defaultElements,
     currentElements: []
@@ -38,11 +41,12 @@ class App extends React.Component<TreeProps, TreeState> {
   render() {
     return (
       <div className="App">
+        <IntroPopup />
         <Header />
         {this.state.currentElements.length !== 0 &&
           <>
             <TreeElements 
-              elements={this.state.currentElements} 
+              elements={this.state.currentElements}
             />
             <Toolbar 
               shuffleElements={this.shuffleElements.bind(this)}

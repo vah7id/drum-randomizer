@@ -50,6 +50,13 @@ header h2 {
     text-decoration: underline;
 }
 
+header span {
+    float: left;
+    margin: 30px 0 0 -30px;
+    font-size: 14px;
+    opacity: 0.5;
+}
+
 .btn-help, .btn-save, .btn-search {
     float: right;
     margin: 20px 0 0 20px;
@@ -248,4 +255,52 @@ canvas{
     top:0;
     left:0;
     z-index:-1;
+}
+
+/* ====================== INTRO POPUP ========================*/
+
+.Intro-Popup {
+    position: fixed;
+    top: 0px;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    text-align: center;
+    z-index: 1000;
+    transition: 1s all;
+}
+
+.Intro-Popup.hide {
+    opacity:0;
+    z-index: -1;
+}
+
+.Intro-Popup h2 {
+    font-size: 32px;
+    margin-top: 100px;
+}
+
+.Intro-Popup h3 {
+    margin-bottom: 50px;
+}
+
+.Intro-Popup p {
+    opacity: 0.5;
+    width: 500px;
+    margin: 25px auto 50px auto;
+    line-height: 24px;
+}
+
+.Intro-Popup svg {
+    display: block;
+    font-size: 42px;
+    margin: 0 auto 20px auto;
+
+}
+
+.Intro-Popup a {
+    color: blue;
+    text-decoration: underline;
+    text-transform: uppercase;
 }

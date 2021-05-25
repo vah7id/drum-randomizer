@@ -1,15 +1,15 @@
 import React from 'react';
-import { FiHelpCircle } from "react-icons/fi";
+import { FiGithub } from "react-icons/fi";
 import { FiSave } from "react-icons/fi";
-import { FiSearch } from "react-icons/fi";
 
 function Header() {
   return (
     <header>
         <h2>DRUM RANDOMIZER</h2>
-        <button className={'btn-icon btn-help'}>
-           <FiHelpCircle />
-        </button>
+        <span>(VER 0.0.9)</span>
+        <a target={'_blank'} href={'https://github.com/vah7id/drum-randomizer'} className={'btn-icon btn-help'}>
+           <FiGithub />
+        </a>
         <button disabled className={'btn-icon btn-save'}>
            <FiSave />
         </button>
