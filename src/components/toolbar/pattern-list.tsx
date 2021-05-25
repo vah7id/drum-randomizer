@@ -21,6 +21,7 @@ const Patterns = (props: PatternsProps) => {
                             pattern.map((p, index) => <span 
                                 onClick={(e: any) => handlePatternChange(e, i, index)}
                                 key={`column-${i}-${index}`} 
+                                id={`column-${i}-${index}`}
                                 className={p === 1 ? 'active':''}
                             ></span>)
                         }

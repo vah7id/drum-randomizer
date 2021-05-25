@@ -18,6 +18,7 @@ export interface TreeProps {
 
 export interface PatternsProps {
     patterns: number[][],
+    isPlaying?: boolean,
     updatePattern(pattern: number[], value: number): void
 }
 

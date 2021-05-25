@@ -13,7 +13,7 @@ const Toolbar = (props: ToolbarProps) => {
         
     // defaults
     const MAX_DRUM_RACK = 5;
-    const DEFAULT_TEMPO = 60;
+    const DEFAULT_TEMPO = 120;
 
     // state hooks
     const [play, triggerPlay] = useState<boolean>(false);
@@ -49,7 +49,6 @@ const Toolbar = (props: ToolbarProps) => {
 
     const setupDrumRack = (autoplay: boolean) => {
         // by default setup 5 random drum rack to start
-        console.log(elements)
         const drumRack = new Tone.Sampler({
             C1: `${process.env.REACT_APP_SAMPLES_URL}/${elements[0].destination}`,
             C2: `${process.env.REACT_APP_SAMPLES_URL}/${elements[1].destination}`,
@@ -73,19 +72,32 @@ const Toolbar = (props: ToolbarProps) => {
     }
 
     const playSequencer = (drumRack: any) => {
+       
         const seq = new Tone.Sequence((time, note) => {
             // play the racks based on current pattern
             pattern.forEach((patternRow, i) => {
                 patternRow.forEach((patternIndex, idx) => {
                     if(patternIndex === 1) {
                         const scheduleTime = time + (idx * ((60 * 1000 / tempo) / 1000));
+                        const sequencerPatternEl = document.getElementById(`column-${i}-${idx}`);
+                        
                         drumRack.volume.value = mute ? -100 : -10;
                         drumRack.triggerAttack(`C${i+1}`, scheduleTime);
+
+                        if(sequencerPatternEl) {
+                            setTimeout(() => {
+                                const bg = sequencerPatternEl.style.background;
+                                sequencerPatternEl.style.background = 'yellow';
+                                
+                                // clear activated pattern
+                                setTimeout(() => sequencerPatternEl.style.background = bg, 500);
+                            }, scheduleTime * (60/tempo)*1000 );
+                        }
                     }
                 })
             });
             // subdivisions are given as subarrays
-        }, ["C1", "C2", "C3", "C4", "C5"], 60/tempo).start(0);
+        }, ["C1", "C2", "C3", "C4", "C5"], ((60/tempo) * 16) / 2 ).start(0);
         
         Tone.Transport.start();
         setLoop(seq);
@@ -95,7 +107,6 @@ const Toolbar = (props: ToolbarProps) => {
         Tone.Transport.stop();
         loop.stop();
         sampler?.disconnect();
-        console.log('asdasd')
     }
 
     const handlePlay = () => {
@@ -162,12 +173,16 @@ const Toolbar = (props: ToolbarProps) => {
         if(Object.keys(props.elements) !== Object.keys(elements)) {
             setElemenets(props.elements);
         }
-    }, [elements, pattern])
+    }, [elements, pattern, play])
 
     return (
         <div className="Toolbar">
             <div className="Toolbar-patterns">
-                <Patterns updatePattern={updatePattern.bind(this)} patterns={pattern} />
+                <Patterns 
+                    isPlaying={play} 
+                    updatePattern={updatePattern.bind(this)} 
+                    patterns={pattern} 
+                />
             </div>
             <div className="Toolbar-actions">
                 <button onClick={() => handlePlay()} className="btn-icon btn-play">
