@@ -12,7 +12,7 @@ class App extends React.Component<TreeProps, TreeState> {
  
   state: TreeState = {
     loading: true,
-    patterns: defaultPatterns,
+    patterns: [],
     defaultElements: defaultElements,
     currentElements: []
   };
@@ -21,6 +21,17 @@ class App extends React.Component<TreeProps, TreeState> {
     this.setState({
       currentElements: this.getRandomElements(this.state.defaultElements)
     });
+  }
+
+  parseDataPatterns() {
+    let result: number[][] = [];
+    const parsedPatterns = defaultPatterns.split('\n');
+    
+    parsedPatterns.map((pattern: any, i) => {
+      result[i] = pattern.split(',').map((p: string) => parseInt(p)).slice(0, 16);
+    });
+
+    this.setState({ patterns: result });
   }
 
   getRandomElements(elements: IElement[]) {
@@ -36,6 +47,7 @@ class App extends React.Component<TreeProps, TreeState> {
 
   componentDidMount() {
     this.shuffleElements();
+    this.parseDataPatterns();
   }
 
   render() {
@@ -43,7 +55,8 @@ class App extends React.Component<TreeProps, TreeState> {
       <div className="App">
         <IntroPopup />
         <Header />
-        {this.state.currentElements.length !== 0 &&
+        {(this.state.currentElements.length !== 0 &&
+          this.state.patterns.length !== 0) &&
           <>
             <TreeElements 
               elements={this.state.currentElements}

@@ -22,7 +22,7 @@ const Toolbar = (props: ToolbarProps) => {
     const [sampler, setSampler] = useState<Tone.Sampler | undefined>();
     const [elements, setElemenets] = useState<IElement[]>(props.elements);
     const [loop, setLoop] = useState<any>();
-    const [pattern, setPattern] = useState<number[][]>(props.patterns[0]);
+    const [pattern, setPattern] = useState<number[][]>([[]]);
 
     const playLoop = () => {
         if(elements) {
@@ -75,9 +75,10 @@ const Toolbar = (props: ToolbarProps) => {
        
         const seq = new Tone.Sequence((time, note) => {
             // play the racks based on current pattern
+            console.log(pattern)
             pattern.forEach((patternRow, i) => {
                 patternRow.forEach((patternIndex, idx) => {
-                    if(patternIndex === 1) {
+                    if(patternIndex !== 0) {
                         const scheduleTime = time + (idx * ((60 * 1000 / tempo) / 1000));
                         const sequencerPatternEl = document.getElementById(`column-${i}-${idx}`);
                         
@@ -153,13 +154,42 @@ const Toolbar = (props: ToolbarProps) => {
         }
     }
 
+    const getRandomPatterns = (patterns: number[][]) => {
+        const randNums = new Set();
+        
+        // generate 5 random number of racks from default elements
+        while(randNums.size !== 5) {
+            randNums.add(Math.floor(Math.random() * patterns.length-1) + 1);
+        }
+        return patterns.filter((el, i) => Array.from(randNums).includes(i));
+    }
+
+    const isPatternValid = (patterns: number[][]): boolean => {
+        let flag = true;
+        patterns.forEach(pattern => {
+            if(pattern.every(p => p === 0)) {
+                flag = false;
+            }
+        });
+        return flag;
+    }
+
     const shufflePattern = () => {
+
         // disconnect the sampler before reset the elements
         Tone.Transport.stop();
         sampler?.disconnect();
 
         // set random pattern from default patterns
-        setPattern(props.patterns[Math.floor(Math.random() * props.patterns.length-1) + 1]);
+        let rndPatterns: number[][] = [];
+        let isValid = false;
+        
+        while(!isValid) {
+            rndPatterns = getRandomPatterns(props.patterns);
+            isValid = isPatternValid(rndPatterns);
+        }
+    
+        setPattern(rndPatterns);
         props.shuffleElements();
 
         if(loop) {
@@ -168,6 +198,11 @@ const Toolbar = (props: ToolbarProps) => {
     }
 
     useEffect(() => {
+        // fetch 5 random data set from patterns model
+        if(pattern.length !== 5) {
+            shufflePattern();
+        }
+
         // setup and initialize the drum rack sampler
         setupDrumRack(false);
         if(Object.keys(props.elements) !== Object.keys(elements)) {

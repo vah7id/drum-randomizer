@@ -7,7 +7,7 @@ export interface IElement {
 }
 
 export interface TreeState {
-    patterns: number[][][],
+    patterns: number[][],
     loading: boolean,
     defaultElements: IElement[],
     currentElements: IElement[],
@@ -24,7 +24,7 @@ export interface PatternsProps {
 }
 
 export interface ToolbarProps {
-    patterns: number[][][],
+    patterns: number[][],
     elements: IElement[],
     shuffleElements(): void,
 };

@@ -15,14 +15,14 @@ const Patterns = (props: PatternsProps) => {
     return (
         <div className="Patterns">
             {
-                props.patterns.map((pattern, i) => 
+                props.patterns && props.patterns.map((pattern, i) => 
                     <div className={'pattern-row'} key={`row-${i}`}>
                         {
                             pattern.map((p, index) => <span 
                                 onClick={(e: any) => handlePatternChange(e, i, index)}
                                 key={`column-${i}-${index}`} 
                                 id={`column-${i}-${index}`}
-                                className={p === 1 ? 'active':''}
+                                className={p !== 0 ? 'active':''}
                             ></span>)
                         }
                     </div>
