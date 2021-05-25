@@ -31,5 +31,6 @@ export interface ToolbarProps {
 
 export interface TempoProps {
     tempo: number,
+    disabled: boolean,
     handleTempo(e: any): void
 }

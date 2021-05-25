@@ -75,10 +75,10 @@ const Toolbar = (props: ToolbarProps) => {
        
         const seq = new Tone.Sequence((time, note) => {
             // play the racks based on current pattern
-            console.log(pattern)
             pattern.forEach((patternRow, i) => {
                 patternRow.forEach((patternIndex, idx) => {
                     if(patternIndex !== 0) {
+                        
                         const scheduleTime = time + (idx * ((60 * 1000 / tempo) / 1000));
                         const sequencerPatternEl = document.getElementById(`column-${i}-${idx}`);
                         
@@ -91,14 +91,14 @@ const Toolbar = (props: ToolbarProps) => {
                                 sequencerPatternEl.style.background = 'yellow';
                                 
                                 // clear activated pattern
-                                setTimeout(() => sequencerPatternEl.style.background = bg, 500);
-                            }, scheduleTime * (60/tempo)*1000);
+                                setTimeout(() => sequencerPatternEl.style.background = bg, 200);
+                            }, (idx * ((60 * 1000 / tempo) / 1000)) * 1000 );
                         }
                     }
                 })
             });
             // subdivisions are given as subarrays
-        }, ["C1", "C2", "C3", "C4", "C5"], ((60/tempo) * 16) / 2 ).start(0);
+        }, ["C1", "C2", "C3", "C4", "C5"], ((60/tempo) * 16)).start(0);
         
         Tone.Transport.start();
         setLoop(seq);
@@ -107,6 +107,8 @@ const Toolbar = (props: ToolbarProps) => {
     const stopLoop = () => {
         Tone.Transport.stop();
         loop.stop();
+        sampler?.releaseAll();
+        sampler?.dispose();
         sampler?.disconnect();
     }
 
@@ -129,16 +131,8 @@ const Toolbar = (props: ToolbarProps) => {
 
     const handleTempo = (e: any) => {
         setTempo(e.target.value);
-        
-        if(play) {
-            e.target.setAttribute('disabled', 'disabled');
-            playBack();
-            // this timeout will fix the performance issue
-            setTimeout(() => {
-                e.target.removeAttribute('disabled');
-            }, 200);
-        }
-       
+        Tone.Transport.stop();
+        sampler?.disconnect();
     }
 
     const playBack = () => {
@@ -177,24 +171,26 @@ const Toolbar = (props: ToolbarProps) => {
     const shufflePattern = () => {
 
         // disconnect the sampler before reset the elements
-        Tone.Transport.stop();
-        sampler?.disconnect();
+        if(loop){
+            triggerPlay(false);
+            stopLoop();
+        }
 
-        // set random pattern from default patterns
-        let rndPatterns: number[][] = [];
-        let isValid = false;
+        setTimeout(() => {
+            // set random pattern from default patterns
+            let rndPatterns: number[][] = [];
+            let isValid = false;
+            
+            while(!isValid) {
+                rndPatterns = getRandomPatterns(props.patterns);
+                isValid = isPatternValid(rndPatterns);
+            }
         
-        while(!isValid) {
-            rndPatterns = getRandomPatterns(props.patterns);
-            isValid = isPatternValid(rndPatterns);
-        }
-    
-        setPattern(rndPatterns);
-        props.shuffleElements();
+            setPattern(rndPatterns);
+            props.shuffleElements();
+           
+        }, 500);
 
-        if(loop) {
-            playBack();
-        }
     }
 
     useEffect(() => {
@@ -229,7 +225,7 @@ const Toolbar = (props: ToolbarProps) => {
                 <button onClick={() => handleVolume()} className={'btn-icon btn-volume'}>
                     {mute ? <FiVolume2 /> : <FiVolumeX />}
                 </button>
-                <Tempo tempo={tempo} handleTempo={handleTempo} />
+                <Tempo disabled={play} tempo={tempo} handleTempo={handleTempo} />
             </div>
             
         </div>

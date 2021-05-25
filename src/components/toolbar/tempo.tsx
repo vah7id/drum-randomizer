@@ -7,6 +7,7 @@ const Tempo = (props: TempoProps) => {
             <input type={'number'} 
                 className={'input-tempo'} 
                 name={'tempo'} 
+                disabled={props.disabled}
                 value={props.tempo.toString()} 
                 onChange={(e) => props.handleTempo(e)}
             />
