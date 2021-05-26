@@ -109,6 +109,11 @@ header input[type=text] {
     color: white;
 }
 
+#Data-Visulaizer {
+    position: absolute;
+    top: 0;
+}
+
 /* ====================== TOOLBAR ========================*/
 
 .Toolbar {
