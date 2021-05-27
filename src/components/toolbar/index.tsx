@@ -50,11 +50,11 @@ const Toolbar = (props: ToolbarProps) => {
     const setupDrumRack = (autoplay: boolean) => {
         // by default setup 5 random drum rack to start
         const drumRack = new Tone.Sampler({
-            C1: `${process.env.REACT_APP_SAMPLES_URL}/${elements[0].destination}`,
-            C2: `${process.env.REACT_APP_SAMPLES_URL}/${elements[1].destination}`,
-            C3: `${process.env.REACT_APP_SAMPLES_URL}/${elements[2].destination}`,
-            C4: `${process.env.REACT_APP_SAMPLES_URL}/${elements[3].destination}`,
-            C5: `${process.env.REACT_APP_SAMPLES_URL}/${elements[4].destination}`,   
+            C1: `${elements[0].destination}`,
+            C2: `${elements[1].destination}`,
+            C3: `${elements[2].destination}`,
+            C4: `${elements[3].destination}`,
+            C5: `${elements[4].destination}`,   
         }, () => {
 
             // store the sampler for next usage 
