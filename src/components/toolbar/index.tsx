@@ -12,7 +12,6 @@ import Tempo from './tempo';
 const Toolbar = (props: ToolbarProps) => {
         
     // defaults
-    const MAX_DRUM_RACK = 5;
     const DEFAULT_TEMPO = 120;
 
     // state hooks
@@ -195,16 +194,21 @@ const Toolbar = (props: ToolbarProps) => {
 
     useEffect(() => {
         // fetch 5 random data set from patterns model
+        
         if(pattern.length !== 5) {
+            // eslint-disable-next-line
             shufflePattern();
         }
 
         // setup and initialize the drum rack sampler
+        // eslint-disable-next-line
         setupDrumRack(false);
         if(Object.keys(props.elements) !== Object.keys(elements)) {
+            // eslint-disable-next-line
             setElemenets(props.elements);
         }
-    }, [elements, pattern, play])
+    }, [elements, pattern, play]) // eslint-disable-line react-hooks/exhaustive-deps
+
 
     return (
         <div className="Toolbar">

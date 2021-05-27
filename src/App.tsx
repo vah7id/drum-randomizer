@@ -27,8 +27,9 @@ class App extends React.Component<TreeProps, TreeState> {
     let result: number[][] = [];
     const parsedPatterns = defaultPatterns.split('\n');
     
-    parsedPatterns.map((pattern: any, i) => {
+    parsedPatterns.map((pattern: string, i) => {
       result[i] = pattern.split(',').map((p: string) => parseInt(p)).slice(0, 16);
+      return result;
     });
 
     this.setState({ patterns: result });

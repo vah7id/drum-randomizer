@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { IElement } from '../../types';
 import * as Tone from 'tone'
 import * as d3 from "d3";
