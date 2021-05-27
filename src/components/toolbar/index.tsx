@@ -35,10 +35,9 @@ const Toolbar = (props: ToolbarProps) => {
         tmp[patternIndex[0]][patternIndex[1]] = value === 1 ? 0 : 1;
         
         // play the current rack sound 
-        if(sampler) {
-            sampler.triggerAttack(`C${patternIndex[0]+1}`);
-        }
+        sampler?.triggerAttack(`C${patternIndex[0]+1}`);
 
+        // update pattern in state
         setPattern(tmp);
 
         if(play) {
@@ -47,13 +46,14 @@ const Toolbar = (props: ToolbarProps) => {
     }
 
     const setupDrumRack = (autoplay: boolean) => {
+
         // by default setup 5 random drum rack to start
         const drumRack = new Tone.Sampler({
-            C1: `${elements[0].destination}`,
-            C2: `${elements[1].destination}`,
-            C3: `${elements[2].destination}`,
-            C4: `${elements[3].destination}`,
-            C5: `${elements[4].destination}`,   
+            C1: elements[0].destination,
+            C2: elements[1].destination,
+            C3: elements[2].destination,
+            C4: elements[3].destination,
+            C5: elements[4].destination,   
         }, () => {
 
             // store the sampler for next usage 
@@ -72,12 +72,14 @@ const Toolbar = (props: ToolbarProps) => {
 
     const playSequencer = (drumRack: any) => {
        
-        const seq = new Tone.Sequence((time, note) => {
+        const seq = new Tone.Sequence((time) => {
+
             // play the racks based on current pattern
             pattern.forEach((patternRow, i) => {
                 patternRow.forEach((patternIndex, idx) => {
+                    
                     if(patternIndex !== 0) {
-                        
+                        // schedule time to trigger note
                         const scheduleTime = time + (idx * ((60 * 1000 / tempo) / 1000));
                         const sequencerPatternEl = document.getElementById(`column-${i}-${idx}`);
                         
@@ -96,7 +98,6 @@ const Toolbar = (props: ToolbarProps) => {
                     }
                 })
             });
-            // subdivisions are given as subarrays
         }, ["C1", "C2", "C3", "C4", "C5"], ((60/tempo) * 16)).start(0);
         
         Tone.Transport.start();
@@ -176,10 +177,12 @@ const Toolbar = (props: ToolbarProps) => {
         }
 
         setTimeout(() => {
+
             // set random pattern from default patterns
             let rndPatterns: number[][] = [];
             let isValid = false;
             
+            // fetch another pattern when the pattern is not valid
             while(!isValid) {
                 rndPatterns = getRandomPatterns(props.patterns);
                 isValid = isPatternValid(rndPatterns);
@@ -196,15 +199,12 @@ const Toolbar = (props: ToolbarProps) => {
         // fetch 5 random data set from patterns model
         
         if(pattern.length !== 5) {
-            // eslint-disable-next-line
             shufflePattern();
         }
 
         // setup and initialize the drum rack sampler
-        // eslint-disable-next-line
         setupDrumRack(false);
         if(Object.keys(props.elements) !== Object.keys(elements)) {
-            // eslint-disable-next-line
             setElemenets(props.elements);
         }
     }, [elements, pattern, play]) // eslint-disable-line react-hooks/exhaustive-deps

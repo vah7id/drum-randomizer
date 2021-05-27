@@ -4,7 +4,7 @@ import { FiGithub } from 'react-icons/fi';
 function IntroPopup() {
 
   useEffect(() => {
-    const el = document.querySelector('.Intro-Popup');
+    const el = document.querySelector('.Intro-Popup') as HTMLElement;
     setTimeout(() => el?.classList.add('hide'), 3000);
   });
 

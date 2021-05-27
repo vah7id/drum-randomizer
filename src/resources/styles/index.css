@@ -92,7 +92,7 @@ header input[type=text] {
     z-index: 100;
     cursor: pointer;
     float: left;
-    max-width: 150px;
+    max-width: 170px;
     text-align: center;
     padding: 40px 25px 40px 25px;
     font-weight: bold;
@@ -193,7 +193,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .btn-shuffle:active {
     color: yellow;
-    background: rgb(227, 94, 17);
+    background: red;
 }
 
 
