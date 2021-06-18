@@ -52,8 +52,7 @@ function TreeElements(props: TreeProps) {
       var y = d3.scaleLinear()
         .domain([0, 500000])
         .range([ height, 0]);
-    
-
+      
       // Add dots
       svg.append('g')
         .selectAll("dot")
@@ -62,8 +61,8 @@ function TreeElements(props: TreeProps) {
         .append("circle")
           .attr("cx", function (d: any) { return x(d?.X); } )
           .attr("cy", function (d: any) { return y(d?.Y); } )
-          .attr("r", (d) => Array.from(randNums).includes(data.indexOf(d)) ? 8.5 : 2.5)
-          .style("fill", (d) => Array.from(randNums).includes(data.indexOf(d)) ? 'blue' : 'yellow')
+          .attr("r", (d) => Array.from(randNums).includes(data.indexOf(d)) ? 12.5 : 3.5)
+          .style("fill", (d) => Array.from(randNums).includes(data.indexOf(d)) ? 'black' : '#eee')
           .style("stroke", "black")
           .style("stroke-width", 1)
 
