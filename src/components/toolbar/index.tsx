@@ -12,7 +12,7 @@ import Tempo from './tempo';
 const Toolbar = (props: ToolbarProps) => {
         
     // defaults
-    const DEFAULT_TEMPO = 120;
+    const DEFAULT_TEMPO = 140;
 
     // state hooks
     const [play, triggerPlay] = useState<boolean>(false);

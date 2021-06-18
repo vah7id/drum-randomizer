@@ -84,7 +84,13 @@ function TreeElements(props: TreeProps) {
 
         </div>
         <div className={'Elements-Wrapper'}>
-          {props.elements.map((element, i) => <div onClick={() => playOneShot(element)} key={`el-${i}`} className={'Tree-Element'}>{element.title}</div>)}
+          {props.elements.map((element, i) => 
+            <div 
+              onClick={() => playOneShot(element)} 
+              key={`el-${i}`} 
+              className={'Tree-Element'}
+            >{element.title}
+            </div>)}
         </div>
       </div>);
 }
