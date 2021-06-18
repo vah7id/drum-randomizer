@@ -15,9 +15,14 @@ The patterns dataset is already imported in the project includeing 32 notes per 
 
 ## Missions      
 
-This project will uses [t-SNE](https://en.wikipedia.org/wiki/T-distributed_stochastic_neighbor_embedding) method and [magenta](https://magenta.tensorflow.org/) as open source research project to classifiy and organize the sounds and in the next step the mission will be find the better pattern for each group of sounds by AI algorithms!    
+This project uses [t-SNE](https://en.wikipedia.org/wiki/T-distributed_stochastic_neighbor_embedding) method and [magenta](https://magenta.tensorflow.org/) as open source research project to classifiy and organize the sounds and in the next step the mission will be find the best pattern based on genre for each group of sounds by AI algorithms!    
 
-Upcoming milestones will be adding groove to drum machine patterns real-time and add audio visualizer while drum is playing based on genre and tempo!     
+Upcoming features:
+1. Make some grooves to drum machine patterns real-time using magenta machine learning tools
+2. Audio visualizer while drum is playing based on genre and tempo!
+3. Save the project as midi our audio file
+4. Provide some output audio effects like delay or reverb
+5. Make an open source drum audio library 
 
 
 `-----`
