@@ -77,7 +77,7 @@ If you're interested to work on AI or machine learning part to find the best alg
 
 
 ### As a Musician    
-If you are musician you can contribute to this project by importing new sounds dataset which could be recorded one-shot sounds or your studio! [Report bugs or issues](https://github.com/vah7id/drum-randomizer/issues)     
+If you are musician you can contribute to this project by importing new sounds dataset which could be recorded one-shot sounds! [Report bugs or issues](https://github.com/vah7id/drum-randomizer/issues)     
  
 
 
